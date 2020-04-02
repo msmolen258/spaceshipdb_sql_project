@@ -1,0 +1,669 @@
+--Creating the tables and populating them
+
+ CREATE TABLE STARSYSTEM
+    (starsys_id NUMBER(3),
+     starsys_name VARCHAR2(30),
+     x NUMBER(3,2),
+     y NUMBER (3,2),
+     z NUMBER (3,2),
+     CONSTRAINT STARSYSTEM_PK PRIMARY KEY(starsys_id));
+
+ INSERT INTO STARSYSTEM (starsys_id, starsys_name, x, y, z) VALUES (100, 'Solar System', 0, 0, 0);
+ INSERT INTO STARSYSTEM (starsys_id, starsys_name, x, y, z) VALUES (101, 'Vulcan System', 6.44, 7.23, 3.1);
+ INSERT INTO STARSYSTEM (starsys_id, starsys_name, x, y, z) VALUES (102, 'Alpha Centauri', 3.19, 2.22, 2);
+
+ CREATE TABLE PLANETS 
+    (planet_id NUMBER(6),
+     planet_name VARCHAR2(30),
+     age NUMBER (5,2),
+     ordinal_position NUMBER(5),
+     starsys_id NUMBER(3),
+     CONSTRAINT PLANETS_PK PRIMARY KEY(planet_id),
+     CONSTRAINT PLANETS_STARSYSTEM_FK FOREIGN KEY (starsys_id) REFERENCES STARSYSTEM(starsys_id));
+ 
+ ALTER TABLE PLANETS RENAME COLUMN age TO age_in_billions;
+ ALTER TABLE PLANETS MODIFY ordinal_position NUMBER(2);
+ 
+ INSERT  INTO PLANETS (planet_id, planet_name, age_in_billions, ordinal_position, starsys_id) VALUES (100101, 'Mercury', 4.6, 1, 100);
+ INSERT  INTO PLANETS (planet_id, planet_name, age_in_billions, ordinal_position, starsys_id) VALUES (100102, 'Venus', 4.6, 2, 100);
+ INSERT  INTO PLANETS (planet_id, planet_name, age_in_billions, ordinal_position, starsys_id) VALUES (100103, 'Earth', 4.5, 3, 100);
+ INSERT  INTO PLANETS (planet_id, planet_name, age_in_billions, ordinal_position, starsys_id) VALUES (100104, 'Mars', 4.6, 4, 100);
+ INSERT  INTO PLANETS (planet_id, planet_name, age_in_billions, ordinal_position, starsys_id) VALUES (100105, 'Vulcan', 5.1, 1, 101);
+ INSERT  INTO PLANETS (planet_id, planet_name, age_in_billions, ordinal_position, starsys_id) VALUES (100106, 'Proxima Centauri B', 4.85, 1, 102);
+ INSERT  INTO PLANETS (planet_id, planet_name, age_in_billions, ordinal_position, starsys_id) VALUES (100107, 'Alpha Centauri Bb', 5.5, 2, 102);
+ 
+ CREATE TABLE STARS 
+    (star_id NUMBER(6),
+     star_name VARCHAR2(30),
+     starsys_id NUMBER(3),
+     CONSTRAINT STARS_PK PRIMARY KEY(star_id),
+     CONSTRAINT STARS_STARSYSTEM_FK FOREIGN KEY (starsys_id) REFERENCES STARSYSTEM(starsys_id));
+
+ INSERT INTO STARS (star_id, star_name, starsys_id) VALUES (100010, 'Sun', 100);
+ INSERT INTO STARS (star_id, star_name, starsys_id) VALUES (100011, 'Scholzs Star', 100);
+ INSERT INTO STARS (star_id, star_name, starsys_id) VALUES (100012, '40 Eridani A', 101);
+ INSERT INTO STARS (star_id, star_name, starsys_id) VALUES (100013, 'Alpha Centauri A', 102);
+ 
+ CREATE TABLE START_POINT
+    (sp_id NUMBER(5),
+     starsys_id NUMBER(3),
+     CONSTRAINT START_POINT_PK PRIMARY KEY (sp_id),
+     CONSTRAINT START_POINT_STARSYSTEM_FK FOREIGN KEY (starsys_id) REFERENCES STARSYSTEM(starsys_id));
+ 
+ INSERT INTO START_POINT (sp_id, starsys_id) VALUES (12345, 100);
+ INSERT INTO START_POINT (sp_id, starsys_id) VALUES (12346, 101);
+ INSERT INTO START_POINT (sp_id, starsys_id) VALUES (12347, 102); 
+  
+ CREATE TABLE DESTINATION
+    (dest_id NUMBER(5),
+     starsys_id NUMBER(3),
+     CONSTRAINT DESTINATION_PK PRIMARY KEY (dest_id),
+     CONSTRAINT DESTINATION_STARSYSTEM_FK FOREIGN KEY (starsys_id) REFERENCES STARSYSTEM(starsys_id));
+ 
+ INSERT INTO DESTINATION (dest_id, starsys_id) VALUES (11111, 100);
+ INSERT INTO DESTINATION (dest_id, starsys_id) VALUES (11112, 101);
+ INSERT INTO DESTINATION (dest_id, starsys_id) VALUES (11113, 102);
+ 
+ CREATE TABLE ENEMIES
+     (enemy_id NUMBER(3),
+      enemy_species VARCHAR2 (30),
+      starsys_id NUMBER(3),
+      CONSTRAINT ENEMIES_PK PRIMARY KEY (enemy_id),
+      CONSTRAINT ENEMIES_STARSYSTEM_FK FOREIGN KEY (starsys_id) REFERENCES STARSYSTEM(starsys_id));
+ 
+ INSERT INTO ENEMIES (enemy_id, enemy_species, starsys_id) VALUES (112, 'The Xindi', 100);
+ INSERT INTO ENEMIES (enemy_id, enemy_species, starsys_id) VALUES (113, 'The Briin Confederacy', 100); 
+ INSERT INTO ENEMIES (enemy_id, enemy_species, starsys_id) VALUES (114, 'The Romulan Star Empire', 101);
+ INSERT INTO ENEMIES (enemy_id, enemy_species, starsys_id) VALUES (115, 'The Borg Collective', 101);
+ 
+ CREATE TABLE SENSORS
+     (sensor_id NUMBER(3),
+      sensor_name VARCHAR2(30),
+      specification VARCHAR2(200),
+      type VARCHAR2(30),
+      CONSTRAINT SENSORS_PK PRIMARY KEY (sensor_id));
+  
+ INSERT INTO SENSORS (sensor_id, sensor_name, specification, type) VALUES (222, 'Long Range', 'Allows to search in a large area in space for objects and adjusts the speed.', 'Navigational');
+ INSERT INTO SENSORS (sensor_id, sensor_name, specification, type) VALUES (223, 'Geological Scan', 'Analyses geological formations.', 'Landing');
+ INSERT INTO SENSORS (sensor_id, sensor_name, specification, type) VALUES (224, 'Temperature Scan', 'Measures the temperature inside and outside.', 'Thermoregulation');
+
+ CREATE TABLE SPACESHIP
+     (spaceship_id NUMBER(3),
+      spaceship_name VARCHAR2(50),
+      make VARCHAR2(50),
+      model VARCHAR2 (50),
+      ss_age NUMBER(5),
+      last_inspection_date DATE,
+      capacity NUMBER(4),
+      CONSTRAINT SPACESHIP_PK PRIMARY KEY (spaceship_id));
+ 
+ INSERT INTO SPACESHIP (spaceship_id, spaceship_name, make, model, ss_age, last_inspection_date, capacity) VALUES (990, 'USS Spaceship Enterprise', 'United Federation of Planets', 'NCC-1701-D', 100, '17-FEB-2350', 400);
+ INSERT INTO SPACESHIP (spaceship_id, spaceship_name, make, model, ss_age, last_inspection_date, capacity) VALUES (991, 'USS Dauntless', 'Federation Dauntless-class', 'FDC-1101-F', 99, '17-FEB-2348', 350);
+ 
+ CREATE TABLE SPACESHIP_SENSORS
+    (spaceship_id NUMBER(3),
+     sensor_id NUMBER(3),
+     CONSTRAINT SPACESHIP_SENSORS_PK PRIMARY KEY (sensor_id, spaceship_id),
+     CONSTRAINT  SPACESHIP_SENSORS_SPACESHIP_FK FOREIGN KEY (spaceship_id) REFERENCES SPACESHIP(spaceship_id),
+     CONSTRAINT  SPACESHIP_SENSORS_SENSORS_FK FOREIGN KEY (sensor_id) REFERENCES SENSORS(sensor_id));
+ 
+ INSERT INTO SPACESHIP_SENSORS (spaceship_id, sensor_id) VALUES (990, 222);
+ INSERT INTO SPACESHIP_SENSORS (spaceship_id, sensor_id) VALUES (990, 223);
+ INSERT INTO SPACESHIP_SENSORS (spaceship_id, sensor_id) VALUES (990, 224);
+ INSERT INTO SPACESHIP_SENSORS (spaceship_id, sensor_id) VALUES (991, 222);
+ 
+ CREATE TABLE SENSORS_LOG
+    (sensorlog_id NUMBER(3),
+     sensor_id NUMBER(3),
+     summary VARCHAR2(500),
+     solution VARCHAR2(500),
+     spaceship_id NUMBER(3),
+     CONSTRAINT SENS_LOG_PK PRIMARY KEY (sensorlog_id),
+     CONSTRAINT SENS_LOG_SPACESHIP_SENSORS_FK FOREIGN KEY(sensor_id,spaceship_id) REFERENCES SPACESHIP_SENSORS(sensor_id,spaceship_id));
+ 
+ INSERT INTO SENSORS_LOG (sensorlog_id, sensor_id, summary, solution, spaceship_id) VALUES (333, 222, 'A big object was detected on the route.', 'The object was destroyed.', 990);
+ INSERT INTO SENSORS_LOG (sensorlog_id, sensor_id, summary, solution, spaceship_id) VALUES (334, 223, 'The surface is not appropriate for landing.', 'Change the destination.', 990);
+ INSERT INTO SENSORS_LOG (sensorlog_id, sensor_id, summary, solution, spaceship_id) VALUES (335, 224, 'The temperature outside is very low.', 'Increasing the temperature inside the spaceship.', 990);
+ 
+ CREATE TABLE NAVIGATION
+    (route_id NUMBER(3),
+     speed NUMBER (9),
+     warp_drive_status VARCHAR2(20),
+     arrival_date DATE,
+     start_date DATE,
+     sensor_id NUMBER(3),
+     spaceship_id NUMBER(3),
+     sp_id NUMBER(5),
+     dest_id NUMBER(5),
+     CONSTRAINT NAVIGATION_PK PRIMARY KEY (route_id),
+     CONSTRAINT NAV_SPACESHIP_SENSORS_FK FOREIGN KEY(sensor_id,spaceship_id) REFERENCES SPACESHIP_SENSORS(sensor_id,spaceship_id), 
+     CONSTRAINT NAV_START_POINT_FK FOREIGN KEY (sp_id) REFERENCES START_POINT(sp_id),
+     CONSTRAINT NAV_DESTINATION_FK FOREIGN KEY (dest_id) REFERENCES DESTINATION(dest_id));
+ 
+ INSERT INTO NAVIGATION (route_id, speed, warp_drive_status, arrival_date, start_date, sensor_id, spaceship_id, sp_id, dest_id) VALUES (345, 300000, 'Light Speed','07-JAN-2358', '12-NOV-2357', 222, 990, 12345, 11111);
+ 
+ CREATE TABLE EVENT 
+    (event_id NUMBER(3),
+     event_name VARCHAR2 (500),
+     CONSTRAINT EVENT_PK PRIMARY KEY (event_id));
+ 
+ INSERT INTO EVENT (event_id, event_name) VALUES (501, 'Attack');
+ INSERT INTO EVENT (event_id, event_name) VALUES (502, 'Fuel low');
+ INSERT INTO EVENT (event_id, event_name) VALUES (503, 'Change route');
+ INSERT INTO EVENT (event_id, event_name) VALUES (504, 'Crew loss');
+ INSERT INTO EVENT (event_id, event_name) VALUES (505, 'Temperature out of control');
+ INSERT INTO EVENT (event_id, event_name) VALUES (506, 'Equipment issue');
+
+ CREATE TABLE CAPTAINS_LOG
+    (log_id  NUMBER(3),
+     log_date DATE,
+     summary VARCHAR2(500),
+     solution VARCHAR2(500),
+     event_id NUMBER(3),
+     CONSTRAINT CAPTAINS_LOG_PK PRIMARY KEY (log_id),
+     CONSTRAINT CAPTAINS_LOG_EVENT_FK FOREIGN KEY (event_id) REFERENCES EVENT(event_id));
+
+ INSERT INTO CAPTAINS_LOG (log_id, log_date, summary, solution, event_id) VALUES (400, '03-JAN-2359', 'The Xindi enemies tried to attack USS Enterprise Spaceship in order to destroy and then to attack Earth and human species.', 'The decision to use the most powerful weapon was made to defend the USS Enterprise Spaceship and the enemies spaceship is 20% damaged.', 501);
+ INSERT INTO CAPTAINS_LOG (log_id, log_date, summary, solution, event_id) VALUES (401, '04-JAN-2359', 'The fuel is lower than expected on the spaceship', 'New resources requested from our Earth`s base', 502);
+ INSERT INTO CAPTAINS_LOG (log_id, log_date, summary, solution, event_id) VALUES (402, '09-JAN-2359', 'Unfortunately we lost the 1st engineer when he was trying to repair the damages left after the attack', 'The 2nd engineer is trained to get ready as soon as possible for being able to fully maintain the spaceship.', 504);
+ 
+ CREATE TABLE REPORT_NO
+    (spaceship_id NUMBER(3),
+     log_id NUMBER(3),
+     CONSTRAINT REPORT_NO_PK PRIMARY KEY (spaceship_id, log_id),
+     CONSTRAINT REPORT_NO_CAPTAINS_LOG_FK FOREIGN KEY (log_id) REFERENCES CAPTAINS_LOG(log_id),
+     CONSTRAINT REPORT_NO_SPACESHIP_FK FOREIGN KEY (spaceship_id) REFERENCES SPACESHIP(spaceship_id));
+     
+ INSERT INTO REPORT_NO (spaceship_id, log_id) VALUES (990, 400); 
+ INSERT INTO REPORT_NO (spaceship_id, log_id) VALUES (990, 401); 
+ INSERT INTO REPORT_NO (spaceship_id, log_id) VALUES (990, 402); 
+  
+ CREATE TABLE OCCUPATION
+    (occupation_id NUMBER(3),
+     occupation_name VARCHAR2(30),
+     qual_level VARCHAR2(10),
+     CONSTRAINT OCCUPATION_PK PRIMARY KEY (occupation_id));
+     
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (101, 'Capitan', 1);
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (102, 'Engineer Senior', 1);
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (103, 'Engineer Junior', 2);
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (104, 'Medical Officer', 1);
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (105, 'Science Officer', 1);
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (106, 'Electrician', 3);
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (107, 'Fashion Officer', 2);
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (108, 'Steward', 3);
+ INSERT INTO OCCUPATION (occupation_id, occupation_name, qual_level) VALUES (109, 'Helmsman', 2);
+ 
+ CREATE TABLE SPACESHIP_LOCATION
+     (location_id NUMBER (3),
+      location_name VARCHAR2 (30),
+      CONSTRAINT SPACESHIP_LOCATION_PK PRIMARY KEY (location_id));
+      
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (201, 'Cockpit');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (202, 'Engine Room');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (203, 'Crew Canteen');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (204, 'Science Lab');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (205, 'Nursery');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (301, 'Guest Room');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (302, 'Pantry Room');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (303, 'Fashion Room');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (304, 'Makeup Room');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (305, 'Other');
+ INSERT INTO SPACESHIP_LOCATION (location_id, location_name) VALUES (000, 'Outside Spaceship');
+ 
+ CREATE TABLE STOCKS 
+     (stock_id NUMBER(3),
+      stock_name VARCHAR2 (30),
+      last_update  DATE,
+      quantity NUMBER (4),
+      measurement_unit VARCHAR2(20),
+      location_id NUMBER(3),
+      CONSTRAINT STOCKS_PK PRIMARY KEY (stock_id),
+      CONSTRAINT STOCKS_SPACESHIP_LOCATION_FK FOREIGN KEY (location_id) REFERENCES SPACESHIP_LOCATION(location_id));
+      
+ INSERT INTO STOCKS (stock_id, stock_name, last_update, quantity, measurement_unit, location_id) VALUES (001, 'Fuel', '12-DEC-2358', 9000, 'gallons', 202);
+ INSERT INTO STOCKS (stock_id, stock_name, last_update, quantity, measurement_unit, location_id) VALUES (002, 'Food', '29-DEC-2358', 800, 'kilos', 302);
+ INSERT INTO STOCKS (stock_id, stock_name, last_update, quantity, measurement_unit, location_id) VALUES (003, 'Medicines', '30-DEC-2358', 800, 'types', 205);
+ INSERT INTO STOCKS (stock_id, stock_name, last_update, quantity, measurement_unit, location_id) VALUES (004, 'Beauty', '12-DEC-2358', 9000, 'products', 304);
+
+CREATE TABLE MAINTENANCE_INSTR
+    (issue_id NUMBER(3),
+     issue_name VARCHAR2(50),
+     description VARCHAR2 (1000),
+     occupation_id NUMBER(3),
+     location_id NUMBER(3),
+     last_update DATE,
+     CONSTRAINT MAINTENANCE_INSTR_PK PRIMARY KEY (issue_id),
+     CONSTRAINT MAINTENANCE_INSTR_OCCUP_FK FOREIGN KEY (occupation_id) REFERENCES OCCUPATION(occupation_id));
+     
+ INSERT INTO MAINTENANCE_INSTR (issue_id, issue_name, description, occupation_id, location_id, last_update) VALUES (501, 'Enginee Service', 'Checking all the enginees for any issues.', 102, 202, '12-DEC-2358');
+ INSERT INTO MAINTENANCE_INSTR (issue_id, issue_name, description, occupation_id, location_id, last_update) VALUES (502, 'Fuel Level', 'Checking the stocks for the fuel and keeping it at a certain amount.', 103, 202, '11-DEC-2358');
+ INSERT INTO MAINTENANCE_INSTR (issue_id, issue_name, description, occupation_id, location_id, last_update) VALUES (503, 'Wires check', 'Checking the wires to prevent a shortcircuit in cockpit.', 106, 201, '12-DEC-2358');
+ 
+ CREATE TABLE CREW_MEMBERS
+     (member_id NUMBER(3),
+      member_name VARCHAR2(30),
+      occupation_id NUMBER (3),
+      spaceship_id NUMBER (3),
+      location_id NUMBER(3),
+      age NUMBER(2),
+      gender CHAR(1),
+      login VARCHAR2(20),
+      password VARCHAR2 (20),
+      species VARCHAR2 (20),
+      marital_status VARCHAR2(20),
+      DOB DATE,
+      years_of_experience NUMBER(2),
+      CONSTRAINT CREW_MEMBERS_PK PRIMARY KEY (member_id),
+      CONSTRAINT CREW_MEMBERS_OCCUP_FK FOREIGN KEY (occupation_id) REFERENCES OCCUPATION(occupation_id),
+      CONSTRAINT CREW_MEMBERS_SPACESHIP_FK FOREIGN KEY (spaceship_id) REFERENCES SPACESHIP(spaceship_id),
+      CONSTRAINT CREW_MEMBERS_SS_LOCATION_FK FOREIGN KEY (location_id) REFERENCES SPACESHIP_LOCATION(location_id));
+  
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (801, 'Scotty', 101, 990, 201, 35, 'F', 'capt_scotty', 'captain990', 'Human', 'Single', '01-JAN-2323', 15);
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (802, 'Debbie', 102, 990, 201, 50, 'F', 'engs_debbie', 'senioreng990', 'Human', 'Widowed', '11-MAR-2308', 12);
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (803, 'John', 103, 990, 202, 31, 'M', 'engj_john', 'junioreng990', 'Human', 'Married', '12-APR-2327', 7);
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (804, 'Chris', 104, 990, 205, 30, 'M', 'med_chris', 'med990', 'Human', 'Married', '01-JAN-2328', 10);
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (805, 'Patrick', 105, 990, 204, 45, 'M', 'scien_patrick', 'scientist990', 'Human', 'Single', '22-MAY-2313', 14);
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (806, 'Louse', 106, 990, 201, 30, 'F', 'elect_louse', 'electri990', 'Human', 'Single', '14-NOV-2328', 5);
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (807, 'Kate', 107, 990, 303, 38, 'F', 'fashion_kate', 'fashi990', 'Human', 'Married', '21-JAN-2320', 12);
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (808, 'Mike', 108, 990, 301, 30, 'M', 'steward_mike', 'steward990', 'Human', 'Single', '31-MAR-2328', 9);
+ INSERT INTO CREW_MEMBERS (member_id, member_name, occupation_id, spaceship_id, location_id, age, gender, login, password, species, marital_status, DOB, years_of_experience) VALUES (809, 'Megan', 109, 990, 201, 33, 'F', 'helmsman_megan', 'helsma990', 'Human', 'Married', '02-JAN-2325', 12);
+  
+ CREATE TABLE EQUIPMENT 
+   (equipment_id NUMBER(3),
+    equipment_name VARCHAR2(30),
+    location_id NUMBER(3),
+    category VARCHAR2(30),
+    CONSTRAINT EQUIPMENT_PK PRIMARY KEY (equipment_id),
+    CONSTRAINT EQUIPMENT_SS_LOCATION_FK FOREIGN KEY (location_id) REFERENCES SPACESHIP_LOCATION(location_id));
+  
+ INSERT INTO EQUIPMENT (equipment_id, equipment_name, location_id, category) VALUES (901, 'Space suits', 201, 'Safety');
+ INSERT INTO EQUIPMENT (equipment_id, equipment_name, location_id, category) VALUES (902, 'Laser', 305, 'Weapons');
+ INSERT INTO EQUIPMENT (equipment_id, equipment_name, location_id, category) VALUES (903, 'Spatial Torpedo', 305, 'Weapons');
+ INSERT INTO EQUIPMENT (equipment_id, equipment_name, location_id, category) VALUES (904, 'Oxigen Tanks', 201, 'Safety');
+ INSERT INTO EQUIPMENT (equipment_id, equipment_name, location_id, category) VALUES (905, 'Tablet Computers', 305, 'Communication');
+ INSERT INTO EQUIPMENT (equipment_id, equipment_name, location_id, category) VALUES (906, 'Warp Drive', 201, 'Navigation');
+  
+ CREATE TABLE SPACESHIP_EQUIPMENT
+    (spaceship_id NUMBER(3),
+     equipment_id NUMBER(3),
+     quantity NUMBER(3),
+     CONSTRAINT SS_EQUIPMENT_PK primary key (spaceship_id, equipment_id),
+     CONSTRAINT SS_EQUIPMENT_EQUIPMENT_FK FOREIGN KEY (equipment_id) REFERENCES EQUIPMENT(equipment_id),
+     CONSTRAINT SS_EQUIPMENT_SPACESHIP_FK FOREIGN KEY (spaceship_id) REFERENCES SPACESHIP(spaceship_id));
+     
+ INSERT INTO SPACESHIP_EQUIPMENT (spaceship_id, equipment_id, quantity) VALUES(990, 901, 100);
+ INSERT INTO SPACESHIP_EQUIPMENT (spaceship_id, equipment_id, quantity) VALUES(990, 902, 400);
+ INSERT INTO SPACESHIP_EQUIPMENT (spaceship_id, equipment_id, quantity) VALUES(990, 903, 300);
+ INSERT INTO SPACESHIP_EQUIPMENT (spaceship_id, equipment_id, quantity) VALUES(990, 904, 120);
+ INSERT INTO SPACESHIP_EQUIPMENT (spaceship_id, equipment_id, quantity) VALUES(990, 905, 50);
+ INSERT INTO SPACESHIP_EQUIPMENT (spaceship_id, equipment_id, quantity) VALUES(990, 906, 10);
+
+ CREATE TABLE SPACESHIP_ENEMIES 
+    (spaceship_id NUMBER(3),
+     enemy_id NUMBER(3),
+     first_attack_date DATE,
+     risk_level VARCHAR2 (10),
+     CONSTRAINT SS_ENEMIES_PK PRIMARY KEY (spaceship_id, enemy_id),
+     CONSTRAINT SS_ENEMIES_ENEMIES_FK FOREIGN KEY (enemy_id) REFERENCES ENEMIES(enemy_id),
+     CONSTRAINT SS_ENEMIES_SPACESHIP_FK FOREIGN KEY (spaceship_id) REFERENCES SPACESHIP(spaceship_id));
+   
+ INSERT INTO SPACESHIP_ENEMIES (spaceship_id, enemy_id, first_attack_date, risk_level) VALUES (990,112, '01-JAN-2300','High');
+ INSERT INTO SPACESHIP_ENEMIES (spaceship_id, enemy_id, first_attack_date, risk_level) VALUES (990,113, '21-FEB-2200','Low');
+ INSERT INTO SPACESHIP_ENEMIES (spaceship_id, enemy_id, first_attack_date, risk_level) VALUES (990,114, '11-MAY-2348','Medium');
+
+--In case of needing to drop the tables
+DROP TABLE STARS;
+DROP TABLE PLANETS;
+DROP TABLE NAVIGATION;
+DROP TABLE SPACESHIP_ENEMIES;
+DROP TABLE REPORT_NO;
+DROP TABLE STOCKS;   
+DROP TABLE CREW_MEMBERS;
+DROP TABLE CURRENT_POINT;
+DROP TABLE DESTINATION;
+DROP TABLE MAINTENANCE_INSTR;
+DROP TABLE ENEMIES;
+DROP TABLE STARSYSTEM;
+DROP TABLE SENSORS_LOG;
+DROP TABLE SPACESHIP_EQUIPMENT;
+DROP TABLE OCCUPATION;
+DROP TABLE EQUIPMENT;
+DROP TABLE SPACESHIP_LOCATION;
+DROP TABLE SPACESHIP_SENSORS;
+DROP TABLE SPACESHIP;
+DROP TABLE SENSORS;
+DROP TABLE CAPTAINS_LOG;
+DROP TABLE EVENT;
+
+
+
+
+
+SET SERVEROUTPUT ON;
+
+-- FUNCTIONS
+-- Finding the location of a crew member based on the member id
+
+CREATE OR REPLACE FUNCTION location_crewmember (membid crew_members.member_id%TYPE) 
+    RETURN VARCHAR2 IS
+        location_memb spaceship_location.location_name%TYPE;           
+BEGIN
+    SELECT location_name
+    INTO location_memb
+    FROM spaceship_location sl, crew_members cm
+    WHERE sl.location_id = cm.location_id AND cm.member_id = membid;
+    RETURN location_memb;
+END;
+
+-- Testing the function that returns the crew members location
+SELECT location_crewmember(member_id)
+FROM crew_members 
+WHERE member_id LIKE '&memberid%';
+
+
+--The function that finds the distance between two given star systems
+CREATE OR REPLACE FUNCTION distance_sys(a starsystem.starsys_id%TYPE, b starsystem.starsys_id%TYPE)
+    RETURN NUMBER IS 
+        dist NUMBER;
+        xa starsystem.x%TYPE; 
+        ya starsystem.y%TYPE; 
+        za starsystem.z%TYPE; 
+        xb starsystem.x%TYPE; 
+        yb starsystem.y%TYPE; 
+        zb starsystem.z%TYPE; 
+BEGIN
+    SELECT x, y, z
+    INTO xa, ya, za
+    FROM starsystem WHERE starsys_id=a;
+    
+    SELECT x,y,z
+    INTO xb, yb, zb
+    FROM starsystem WHERE starsys_id=b;
+    
+    dist := sqrt((xb-xa)*(xb-xa)+(yb-ya)*(yb-ya)+(zb-za)*(zb-za));
+    RETURN dist; 
+END;
+
+--Testing the function that returns the distance in light years between the given starsystem ids 
+SELECT ROUND(distance_sys(101,102),3) "Dist in light years"
+FROM dual;
+
+
+--PROCEDURES
+--Procedure for beaming out a given crew member based on member id
+CREATE OR REPLACE PROCEDURE beaming_out (member_id_req IN crew_members.member_id%TYPE)
+IS
+    our_excep EXCEPTION;
+    var_loc spaceship_location.location_id%TYPE;
+BEGIN
+    SELECT location_id 
+    INTO var_loc
+    FROM crew_members WHERE member_id_req = member_id;
+    IF var_loc=0 THEN 
+        RAISE our_excep;
+    END IF;
+    UPDATE crew_members SET location_id=0 WHERE member_id=member_id_req;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN 
+            DBMS_OUTPUT.PUT_LINE('This is not a known member ID, please try again.');
+        WHEN our_excep THEN
+            Raise_application_error(-20001, 'Already beamed out.');
+END;
+
+--Values to test
+CALL beaming_out(804);
+CALL beaming_out(890);
+CALL beaming_out(806);
+
+--Chechiking the procedure for beaming out
+SELECT cm.member_id, cm.member_name, sl.location_id, sl.location_name
+FROM crew_members cm INNER JOIN spaceship_location sl ON cm.location_id=sl.location_id;
+
+--Procedure for beaming into the cockpit 
+CREATE OR REPLACE PROCEDURE beaming_in (member_id_req IN crew_members.member_id%TYPE)
+IS 
+    our_excep_in EXCEPTION;
+    var_loc spaceship_location.location_id%TYPE;
+BEGIN
+    SELECT location_id 
+    INTO var_loc
+    FROM crew_members WHERE member_id_req = member_id;
+    IF var_loc!=0 THEN 
+        RAISE our_excep_in;
+    END IF;
+    UPDATE crew_members SET location_id=201 WHERE member_id=member_id_req;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN 
+            DBMS_OUTPUT.PUT_LINE('This is not a known member ID, please try again.');
+        WHEN our_excep_in THEN
+            Raise_application_error(-20002, 'Already beamed in.');
+END;
+
+--Values to test
+CALL beaming_in(804);
+
+--Checking the procedure of beaming in
+SELECT cm.member_id, cm.member_name, sl.location_id, sl.location_name
+FROM crew_members cm INNER JOIN spaceship_location sl ON cm.location_id=sl.location_id
+ORDER BY cm.member_id;
+
+--In case of an attack, the following procedures will be executed (see procedure "attack")
+--1 out of 3: Decreasing the quantity of a given equipment by 20%
+CREATE OR REPLACE PROCEDURE change_quantity (equip_id_req IN equipment.equipment_id%TYPE) IS
+    var_quantity spaceship_equipment.quantity%TYPE;
+    our_excep EXCEPTION;
+BEGIN 
+    SELECT quantity
+    INTO var_quantity
+    FROM spaceship_equipment
+    WHERE equip_id_req=equipment_id;
+    IF var_quantity<20 THEN 
+        RAISE our_excep;
+    END IF;
+    UPDATE spaceship_equipment SET quantity=(quantity-quantity*20/100) WHERE equipment_id=equip_id_req;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN 
+            DBMS_OUTPUT.PUT_LINE('This is not a known equipment ID, please try again.');
+        WHEN our_excep THEN
+            Raise_application_error(-20001, 'The quantity is very low!');
+END;
+
+--2 out of 3: Adjusting the speed to 100 000 (accepted as the right speed for attack)
+CREATE OR REPLACE PROCEDURE change_speed
+IS
+   new_speed navigation.speed%TYPE;
+   new_warp navigation.warp_drive_status%TYPE;
+BEGIN
+    SELECT speed, warp_drive_status
+    INTO new_speed, new_warp
+    FROM navigation;
+    IF (new_speed > 100000) THEN 
+        new_speed := 100000;
+        new_warp := 'Speed decreased';
+    ELSIF (new_speed < 100000) THEN
+        new_speed := 100000;
+        new_warp := 'Speed increased';
+    ELSIF (new_speed = 100000) THEN
+        DBMS_OUTPUT.PUT_LINE ('Good speed for attack.');
+    END IF;
+    UPDATE navigation SET speed=new_speed, warp_drive_status=new_warp;
+END;
+
+--3 out of 3: Changing the location of specific crew members to the cockpit
+CREATE OR REPLACE PROCEDURE change_loc (occup_id_req IN occupation.occupation_id%TYPE)
+IS
+    var_loc spaceship_location.location_id%TYPE;
+BEGIN
+    SELECT location_id 
+    INTO var_loc
+    FROM crew_members WHERE occup_id_req = occupation_id;
+    IF var_loc=201 THEN 
+        DBMS_OUTPUT.PUT_LINE(occup_id_req || ' is already in the cockpit.');
+    END IF;
+    UPDATE crew_members SET location_id=201 WHERE occupation_id=occup_id_req;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN 
+            DBMS_OUTPUT.PUT_LINE('This is not a known member ID, please try again.');
+END;
+
+--The attack procedure will call the above three procedures
+CREATE OR REPLACE PROCEDURE attack AS
+BEGIN 
+    DBMS_OUTPUT.PUT_LINE('20% of our weapons prepared for attack.');
+    change_quantity(902);
+    change_quantity(903);
+    DBMS_OUTPUT.PUT_LINE('The speed needs to be adjusted to 100 000.');
+    change_speed();
+    DBMS_OUTPUT.PUT_LINE('Specific crew members are called to come to the cockpit.');
+    change_loc(101);
+    change_loc(102);
+    change_loc(103);
+    change_loc(106);
+END;
+
+--Calling the procedure
+CALL attack();
+
+--Checking for changes
+SELECT * FROM spaceship_equipment;
+SELECT * FROM crew_members;
+SELECT * FROM navigation;
+
+
+--TRIGGERS
+--"Before update trigger" helps to control stocks level 
+
+CREATE OR REPLACE TRIGGER Print_stock_changes
+  BEFORE UPDATE ON stocks
+  FOR EACH ROW
+DECLARE
+    stock_diff NUMBER;
+    our_excep EXCEPTION;
+BEGIN
+    stock_diff  := :old.quantity - :new.quantity;
+    IF :new.quantity < 10 AND :new.quantity > 0 THEN
+        DBMS_OUTPUT.PUT_LINE('Be careful,very low stock of this product! Order needs to be placed!');
+    ELSIF :new.quantity <= 0 THEN
+        RAISE our_excep;
+    END IF; 
+    DBMS_OUTPUT.PUT('Old quantity: ' || :old.quantity);
+    DBMS_OUTPUT.PUT('  New quantity: ' || :new.quantity);
+    DBMS_OUTPUT.PUT_LINE('  Difference: ' || stock_diff);
+    EXCEPTION
+        WHEN our_excep THEN
+            Raise_application_error(-20001, 'Not enough quantity!');
+END;
+
+--Updating
+UPDATE stocks SET quantity = quantity-3 WHERE stock_id=003;
+
+--Seeing changes
+SELECT * FROM STOCKS;
+
+--Updating the speed based on the sensor's solution
+CREATE OR REPLACE TRIGGER sensor_mes 
+    AFTER INSERT ON sensors_log 
+    FOR EACH ROW
+BEGIN  
+    IF :NEW.solution = 'Increase the speed.' THEN
+        UPDATE navigation
+    SET speed = speed + speed*20/100;
+    ELSIF :NEW.solution = 'Decrease the speed.' THEN
+        UPDATE navigation
+    SET speed = speed - speed*20/100;
+    END IF;
+END;
+
+--Inserting to check the trigger
+INSERT INTO SENSORS_LOG(sensorlog_id, sensor_id, summary, solution, spaceship_id) VALUES (339, 222, 'A big object was detected on the route.', 'Decrease the speed.', 990);
+
+--Verifying the changes
+SELECT * FROM NAVIGATION;
+
+
+--SEQUENCES
+--Sequence on captains log id
+CREATE SEQUENCE capt_logs_seq
+INCREMENT BY 1
+START WITH 403; 
+
+--Inserting to check
+INSERT INTO captains_log (log_id, log_date, summary, solution, event_id) VALUES (capt_logs_seq.NEXTVAL, '10-JAN-2359', 'Oxigen Tanks low', 'We needed to order more oxigen tanks due to high use of them lately.', 506 );
+
+--Checking
+SELECT *
+FROM captains_log;
+
+--Sequence on stocks id
+CREATE SEQUENCE stocks_seq
+INCREMENT BY 1
+START WITH 4; 
+
+
+--ACCESS CONTROL AND PERMISSIONS
+--VIEWs
+CREATE OR REPLACE VIEW navigation_view(route_id_v, sp_id_v, dest_id_v) AS 
+SELECT route_id, sp_id, dest_id
+FROM navigation;
+
+CREATE OR REPLACE VIEW crew_members_view(member_id_v, member_name_v, age_v, gender_v, dob_v, location_id_v, occupation_id_v) AS 
+SELECT member_id, member_name, age, gender, dob, location_id, occupation_id
+FROM crew_members;
+
+--Giving access to Alina (rafad60) to the following tables. She is the Medical Officer in our Spaceship
+GRANT SELECT ON crew_members_view TO rafad60;
+GRANT SELECT, INSERT, UPDATE ON STOCKS TO rafad60;
+GRANT SELECT, INSERT ON SPACESHIP_LOCATION TO rafad60;
+GRANT SELECT ON captains_log TO rafad60;
+GRANT SELECT ON event TO rafad60;
+GRANT SELECT ON navigation_view TO rafad60;
+GRANT SELECT ON occupation TO rafad60;
+
+--Giving access to Andreea (calua07) to the following tables. She is the Fashion Officer in our Spaceship
+GRANT SELECT ON captains_log TO calua07;
+GRANT SELECT, INSERT, UPDATE ON STOCKS TO calua07;
+GRANT SELECT ON event TO calua07;
+GRANT SELECT, INSERT ON SPACESHIP_LOCATION TO calua07;
+
+--Giving access to Magda (smolm28) to the following tables. She is the Senior Engineer Officer in our Spaceship
+GRANT SELECT, INSERT, UPDATE ON STOCKS TO smolm28;
+GRANT SELECT, INSERT, UPDATE ON maintenance_instr TO smolm28;
+GRANT SELECT ON occupation TO smolm28;
+GRANT SELECT, INSERT, UPDATE ON STOCKS TO smolm28;
+GRANT SELECT ON crew_members TO smolm28;
+GRANT ALL ON sensors TO smolm28;
+GRANT SELECT ON sensors TO smolm28;
+GRANT ALL ON sensors TO smolm28;
+GRANT SELECT, UPDATE ON navigation TO smolm28;
+GRANT ALL ON spaceship TO smolm28;
+GRANT ALL ON equipment TO smolm28;
+GRANT SELECT ON spaceship_location TO smolm28;
+
+--To all
+GRANT SELECT ON spaceship TO PUBLIC;
+GRANT SELECT ON captains_log TO PUBLIC;
+GRANT SELECT ON enemies TO PUBLIC;
+GRANT SELECT ON stars TO PUBLIC;
+GRANT SELECT ON planets TO PUBLIC;
+GRANT SELECT ON starsystem TO PUBLIC;
+GRANT SELECT ON stocks_seq TO PUBLIC;
+
+--Giving access to the crew member location function
+GRANT EXECUTE ON location_crewmember TO smolm28;
+GRANT EXECUTE ON location_crewmember TO rafad60;
+GRANT EXECUTE ON location_crewmember TO calua07;
+
+--Giving access to the procedure
+GRANT EXECUTE ON beaming_out TO smolm28;
+GRANT EXECUTE ON beaming_in TO smolm28;
+GRANT EXECUTE ON change_quantity TO smolm28;
+
+
+-- INDEXES
+CREATE INDEX crew_memb1 ON crew_members (member_name, login);
+CREATE UNIQUE INDEX stocks_index ON stocks (stock_name);
+CREATE INDEX navigation_index ON navigation (route_id, arrival_date);
+CREATE INDEX navigation_r_index ON navigation (route_id, speed);
+CREATE INDEX equipment_index ON equipment (equipment_name);
+CREATE INDEX location_crew_index ON crew_members (location_id);
